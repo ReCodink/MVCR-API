@@ -1,0 +1,557 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "User dan Movies API",
+        "version": "1.0.0",
+        "description": "REST API untuk User dan Movies API"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8081",
+            "description": "local server"
+        }
+    ],
+    "paths": {
+        "/api/users/register": {
+            "post": {
+                "summary": "Mendaftarkan pengguna baru",
+                "description": "Mendaftarkan pengguna baru dengan informasi yang diberikan.",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/users"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Pengguna berhasil terdaftar"
+                    },
+                    "400": {
+                        "description": "Permintaan tidak valid"
+                    },
+                    "500": {
+                        "description": "Kesalahan server"
+                    }
+                }
+            }
+        },
+        "/api/users/login": {
+            "post": {
+                "summary": "Login pengguna",
+                "description": "Login pengguna dengan kredensial yang diberikan.",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": ["email", "password"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login berhasil"
+                    },
+                    "401": {
+                        "description": "Tidak ada izin atau kredensial tidak valid"
+                    },
+                    "500": {
+                        "description": "Kesalahan server"
+                    }
+                }
+            }
+        },
+        "/api/movies": {
+            "get": {
+                "summary": "Mendapatkan daftar film",
+                "description": "Mengambil daftar semua film yang tersedia.",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Daftar film berhasil diambil"
+                    },
+                    "401": {
+                        "description": "Unauthorized Access"
+                    },
+                    "500": {
+                        "description": "Kesalahan server"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Membuat film baru",
+                "description": "Membuat film baru dengan informasi yang diberikan.",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Data film baru",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/movie"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Film baru berhasil dibuat"
+                    },
+                    "400": {
+                        "description": "Permintaan tidak valid"
+                    },
+                    "401": {
+                        "description": "Unauthorized Access"
+                    },
+                    "500": {
+                        "description": "Kesalahan server"
+                    }
+                }
+            }
+        },
+        "/api/movies/{id}": {
+            "get": {
+                "summary": "Mendapatkan film berdasarkan ID",
+                "description": "Mengambil detail film berdasarkan ID yang diberikan.",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID film yang akan diambil",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detail film berhasil diambil"
+                    },
+                    "401": {
+                        "description": "Unauthorized Access"
+                    },
+                    "404": {
+                        "description": "Film tidak ditemukan"
+                    },
+                    "500": {
+                        "description": "Kesalahan server"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Mengupdate film berdasarkan ID",
+                "description": "Mengupdate detail film berdasarkan ID yang diberikan.",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID film yang akan diupdate",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Data film yang akan diupdate",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/movie"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Film berhasil diupdate"
+                    },
+                    "400": {
+                        "description": "Permintaan tidak valid"
+                    },
+                    "401": {
+                        "description": "Unauthorized Access"
+                    },
+                    "404": {
+                        "description": "Film tidak ditemukan"
+                    },
+                    "500": {
+                        "description": "Kesalahan server"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Menghapus film berdasarkan ID",
+                "description": "Menghapus film berdasarkan ID yang diberikan.",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID film yang akan dihapus",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Film berhasil dihapus"
+                    },
+                    "401": {
+                        "description": "Unauthorized Access"
+                    },
+                    "404": {
+                        "description": "Film tidak ditemukan"
+                    },
+                    "500": {
+                        "description": "Kesalahan server"
+                    }
+                }
+            }
+        },
+        "/api/users": {
+            "get": {
+                "summary": "Mendapatkan daftar user",
+                "description": "Mengambil daftar semua user yang tersedia.",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Daftar user berhasil diambil"
+                    },
+                    "401": {
+                        "description": "Unauthorized Access"
+                    },
+                    "500": {
+                        "description": "Kesalahan server"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Membuat user baru",
+                "description": "Membuat user baru dengan informasi yang diberikan.",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Data user baru",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/users"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User baru berhasil dibuat"
+                    },
+                    "400": {
+                        "description": "Permintaan tidak valid"
+                    },
+                    "401": {
+                        "description": "Unauthorized Access"
+                    },
+                    "500": {
+                        "description": "Kesalahan server"
+                    }
+                }
+            }
+        },
+        "/api/users/{id}": {
+            "get": {
+                "summary": "Mendapatkan user berdasarkan ID",
+                "description": "Mengambil detail user berdasarkan ID yang diberikan.",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID user yang akan diambil",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detail user berhasil diambil"
+                    },
+                    "401": {
+                        "description": "Unauthorized Access"
+                    },
+                    "404": {
+                        "description": "User tidak ditemukan"
+                    },
+                    "500": {
+                        "description": "Kesalahan server"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Mengupdate user berdasarkan ID",
+                "description": "Mengupdate detail user berdasarkan ID yang diberikan.",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID user yang akan diupdate",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Data user yang akan diupdate",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/users"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User berhasil diupdate"
+                    },
+                    "400": {
+                        "description": "Permintaan tidak valid"
+                    },
+                    "401": {
+                        "description": "Unauthorized Access"
+                    },
+                    "404": {
+                        "description": "User tidak ditemukan"
+                    },
+                    "500": {
+                        "description": "Kesalahan server"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Menghapus user berdasarkan ID",
+                "description": "Menghapus user berdasarkan ID yang diberikan.",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID user yang akan dihapus",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "User berhasil dihapus"
+                    },
+                    "401": {
+                        "description": "Unauthorized Access"
+                    },
+                    "404": {
+                        "description": "User tidak ditemukan"
+                    },
+                    "500": {
+                        "description": "Kesalahan server"
+                    }
+                }
+            }
+        },
+        "/api/pagination/users/paginate": {
+            "get": {
+                "summary": "Mendapatkan daftar pengguna dengan paginasi",
+                "description": "Mengambil daftar pengguna dengan paginasi.",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Daftar pengguna berhasil diambil dengan paginasi"
+                    },
+                    "401": {
+                        "description": "Unauthorized Access"
+                    },
+                    "500": {
+                        "description": "Kesalahan server"
+                    }
+                }
+            }
+        },
+        "/api/pagination/movies/paginate": {
+            "get": {
+                "summary": "Mendapatkan daftar film dengan paginasi",
+                "description": "Mengambil daftar film dengan paginasi.",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "limit",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Daftar film berhasil diambil dengan paginasi"
+                    },
+                    "401": {
+                        "description": "Unauthorized Access"
+                    },
+                    "500": {
+                        "description": "Kesalahan server"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        },
+        "schemas": {
+            "users": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "description": "Alamat email pengguna"
+                    },
+                    "gender": {
+                        "type": "string",
+                        "description": "Gender pengguna"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "Password pengguna"
+                    },
+                    "role": {
+                        "type": "string",
+                        "description": "Peran pengguna"
+                    }
+                },
+                "required": ["email", "gender", "password", "role"]
+            },
+            "movie": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "description": "Judul film"
+                    },
+                    "genres": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Genre-genre film"
+                    },
+                    "year": {
+                        "type": "integer",
+                        "description": "Tahun rilis film"
+                    }
+                },
+                "required": ["title", "genres", "year"]
+            }
+        }
+    }
+}
