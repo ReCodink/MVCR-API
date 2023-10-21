@@ -1,0 +1,11 @@
+const app = require('../app');
+const {PORT = 8081} = process.env;
+
+// Healthcheck endpoint
+app.get('/ping', (request, response) => {
+    response.json({ message: 'Ping Successfully' });
+});
+
+app.listen(PORT, () => {
+    console.info(`Application running at http://localhost:` + PORT);
+});
